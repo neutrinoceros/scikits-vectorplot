@@ -4,8 +4,3 @@
 :Copyright: Copyright 2008 Anne Archibald.
 :License: BSD-style license. See LICENSE.txt in the scipy source directory.
 """
-
-import pyximport; pyximport.install()
-from lic import *
-from lic_internal import *
-from kernels import *
