@@ -1,0 +1,36 @@
+[build-system]
+requires = [
+    "setuptools>=61.2",
+    "Cython>=3.0",
+    "numpy>=2.0.0",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vectorplot"
+version = "0.2.0post1"
+description = "Vector fields plotting algorithms."
+authors = [
+    {name="Anne Archibald", email="archibald@astron.nl"},
+]
+dependencies = [
+    # keep in sync with NPY_TARGET_VERSION (setup.py)
+    "numpy>=1.19.3, <3",
+]
+
+[project.license]
+text = "BSD"
+
+[project.readme]
+file = "README.rst"
+content-type = "restructuredtext"
+
+[project.urls]
+Homepage ="https://github.com/aarchiba/scikits-vectorplot"
+
+[tool.setuptools]
+license-files = ["LICENSE"]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+namespaces = false
