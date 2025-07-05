@@ -1,13 +1,15 @@
+# cython: freethreading_compatible = True
 """
 Algorithm based on "Imaging Vecotr Fields Using Line Integral Convolution" 
                    by Brian Cabral and Leith Leedom
 
 """
+import cython
 import numpy as np
 cimport numpy as np
 
 cdef void _advance(float vx, float vy,
-        int* x, int* y, float*fx, float*fy, int w, int h):
+        int* x, int* y, float*fx, float*fy, int w, int h) noexcept nogil:
     """Move to the next pixel in the vector direction. 
     
     This function updates x, y, fx, and fy in place. 
@@ -84,7 +86,6 @@ cdef void _advance(float vx, float vy,
         y[0]=h-1 # FIXME: other boundary conditions?
 
 
-#np.ndarray[float, ndim=2] 
 def line_integral_convolution(
         np.ndarray[float, ndim=2] u,
         np.ndarray[float, ndim=2] v,
@@ -141,55 +142,56 @@ def line_integral_convolution(
  
     result = np.zeros((ny,nx),dtype=np.float32)
 
-    for i in range(ny):
-        for j in range(nx):
-            x = j
-            y = i
-            fx = 0.5
-            fy = 0.5
-            last_ui = 0
-            last_vi = 0
-            
-            k = kernellen//2
-            #print i, j, k, x, y
-            result[i,j] += kernel[k]*texture[y,x]
+    with nogil:
+      for i in range(ny):
+          for j in range(nx):
+              x = j
+              y = i
+              fx = 0.5
+              fy = 0.5
+              last_ui = 0
+              last_vi = 0
 
-            while k<kernellen-1:
-                ui = u[y,x]
-                vi = v[y,x]
-                if pol and (ui*last_ui+vi*last_vi)<0:
-                    ui = -ui
-                    vi = -vi
-                last_ui = ui
-                last_vi = vi
-                _advance(ui,vi,
-                        &x, &y, &fx, &fy, nx, ny)
-                k+=1
-                #print i, j, k, x, y
-                result[i,j] += kernel[k]*texture[y,x]
+              k = kernellen//2
+              #print i, j, k, x, y
+              result[i,j] += kernel[k]*texture[y,x]
 
-            x = j
-            y = i
-            fx = 0.5
-            fy = 0.5
-            last_ui = 0
-            last_vi = 0
+              while k<kernellen-1:
+                  ui = u[y,x]
+                  vi = v[y,x]
+                  if pol and (ui*last_ui+vi*last_vi)<0:
+                      ui = -ui
+                      vi = -vi
+                  last_ui = ui
+                  last_vi = vi
+                  _advance(ui,vi,
+                          &x, &y, &fx, &fy, nx, ny)
+                  k+=1
+                  #print i, j, k, x, y
+                  result[i,j] += kernel[k]*texture[y,x]
+
+              x = j
+              y = i
+              fx = 0.5
+              fy = 0.5
+              last_ui = 0
+              last_vi = 0
    
-            k = kernellen//2
+              k = kernellen//2
    
-            while k>0:
-                ui = u[y,x]
-                vi = v[y,x]
-                if pol and (ui*last_ui+vi*last_vi)<0:
-                    ui = -ui
-                    vi = -vi
-                last_ui = ui
-                last_vi = vi
-                _advance(-ui,-vi,
-                        &x, &y, &fx, &fy, nx, ny)
-                k-=1
-                #print i, j, k, x, y
-                result[i,j] += kernel[k]*texture[y,x]
+              while k>0:
+                  ui = u[y,x]
+                  vi = v[y,x]
+                  if pol and (ui*last_ui+vi*last_vi)<0:
+                      ui = -ui
+                      vi = -vi
+                  last_ui = ui
+                  last_vi = vi
+                  _advance(-ui,-vi,
+                          &x, &y, &fx, &fy, nx, ny)
+                  k-=1
+                  #print i, j, k, x, y
+                  result[i,j] += kernel[k]*texture[y,x]
                     
     return result
 
