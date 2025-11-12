@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vectorplot"
-version = "0.2.0post3"
+version = "0.2.0post4"
 description = "Vector fields plotting algorithms."
 authors = [
     {name="Anne Archibald", email="archibald@astron.nl"},
@@ -28,7 +28,6 @@ content-type = "restructuredtext"
 Homepage ="https://github.com/aarchiba/scikits-vectorplot"
 
 [tool.setuptools]
-license-files = ["LICENSE"]
 include-package-data = false
 
 [tool.setuptools.packages.find]
