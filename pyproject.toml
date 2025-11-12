@@ -1,8 +1,8 @@
 [build-system]
 requires = [
-    "setuptools>=61.2",
-    "Cython>=3.0",
-    "numpy>=2.0.0",
+    "setuptools==80.9.0",
+    "Cython==3.2.0",
+    "numpy==2.3.4",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -13,13 +13,12 @@ description = "Vector fields plotting algorithms."
 authors = [
     {name="Anne Archibald", email="archibald@astron.nl"},
 ]
+license = "BSD-2-Clause OR BSD-3-Clause"
+license-files = ["LICENSE", "LICENSE.txt"]
 dependencies = [
     # keep in sync with NPY_TARGET_VERSION (setup.py)
     "numpy>=1.19.3, <3",
 ]
-
-[project.license]
-text = "BSD"
 
 [project.readme]
 file = "README.rst"
